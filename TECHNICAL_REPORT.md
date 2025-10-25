@@ -306,6 +306,9 @@ extract_new_interactions(last_24h)
 | Error Rate | <0.1% | >0.5% |
 | Cache Staleness | <7 days | >10 days |
 
+**Production Deployment Requirements:**
+Current implementation optimized for merchant workflows (270ms P95, 2,534 RPS). Production deployment would add: API authentication (key-based), rate limiting (per-merchant quotas), and cache headers (1-hour TTL). Customer-facing integration would require additional latency optimization (<100ms P95 target) via pre-computed n-variants or service rewrite in compiled language.
+
 ### Context: Emerging Market E-commerce
 
 This system is designed for platforms serving **thousands of small merchants** in emerging markets (Middle East, Southeast Asia, etc.) where:
