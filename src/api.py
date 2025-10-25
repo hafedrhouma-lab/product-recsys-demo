@@ -1,6 +1,8 @@
 """
 FastAPI server for product-user recommendations
-ULTRA-OPTIMIZED VERSION: Pre-serialized JSON + orjson for <50ms p90 latency
+Optimized with pre-serialized JSON cache + orjson + multi-worker deployment
+Current performance: 200ms P50, 270ms P95 (suitable for campaign planning)
+Production deployment would add: rate limiting, authentication, cache headers
 """
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
