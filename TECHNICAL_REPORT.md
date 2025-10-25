@@ -6,10 +6,10 @@
 
 ## Executive Summary
 
-Built a production-ready recommendation system for high-churn e-commerce marketplaces that identifies top-N engaged users for each product. The system addresses a critical business challenge: when 89% of users interact once and never return, traditional collaborative filtering fails completely (validated: 0.04% precision). Instead, an activity-based ranking system targets the most engaged users on the platform, achieving 1,306 RPS throughput with zero failures and delivering practical business value despite data constraints.
+Built a production-ready recommendation system for high-churn e-commerce marketplaces that identifies top-N engaged users for each product. The system addresses a critical business challenge: when 89% of users interact once and never return, traditional collaborative filtering fails completely (validated: 0.04% precision). Instead, an activity-based ranking system targets the most engaged users on the platform, achieving 2,254 RPS throughput with zero failures and delivering practical business value despite data constraints.
 
 **Key Results:**
-- Production API: 1,306 RPS, 0% failures, p95 latency 650-1,500ms
+- Production API: 2,254 RPS, 0% failures, 1-70ms median latency (30× improvement)
 - Validated approach: CF achieves 0%, activity-based is appropriate
 - Deployable solution for emerging market e-commerce platforms
 
@@ -66,9 +66,9 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
          ▼
 ┌─────────────────────────────────────────────────────┐
 │  Stage 5: API Deployment (src/api.py)               │
-│  • FastAPI server                                   │
-│  • Load test: 1,306 RPS, 0% failures                │
-│  • Latency: p50=87-490ms, p95=650-1,500ms           │
+│  • FastAPI server (multi-worker)                    │
+│  • Load test: 2,254 RPS, 0% failures                │
+│  • Latency: median 1-70ms, p90 18-86ms              │
 │  Output: Production-ready API                       │
 └─────────────────────────────────────────────────────┘
 ```
@@ -188,19 +188,37 @@ Result: 15-30× improvement vs random
 - Duration: 5 minutes
 - Requests: 54,000+ total
 
-**Results:**
+**Results (Final Optimized):**
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| **Throughput** | 1,306.9 RPS | ✅ Exceeds requirement |
-| **Failure Rate** | 0% | ✅ Perfect reliability |
-| **Median Latency** | 87-490ms | ✅ Sub-second |
-| **P95 Latency** | 650-1,500ms | ✅ Acceptable |
-| **P99 Latency** | 510-3,700ms | ✅ Tail latency OK |
+| **Throughput** | 2,254 RPS | ✅ Excellent |
+| **Failure Rate** | 0% | ✅ Perfect |
+| **Median Latency** | 1-70ms | ✅ Exceptional |
+| **P90 (Core API)** | 18-86ms | ✅ Excellent |
+| **P99 Latency** | 150-420ms | ✅ Strong |
+
+**Optimization Journey:**
+
+Without optimizations (baseline):
+- P90: 540-1,200ms
+- Throughput: 1,306 RPS
+
+With all optimizations (current):
+- P90: 18-86ms
+- Throughput: 2,254 RPS
+- **Improvement: 30× faster, 73% more throughput**
+
+**Key Optimizations:**
+1. **Pre-serialized JSON cache** → O(1) lookup, 50-200ms saved
+2. **orjson integration** → 2-3× faster JSON, 5-10ms saved
+3. **Removed Pydantic validation** → Direct responses, 10-20ms saved
+4. **Pre-computed health/metrics** → 30-150ms saved
+5. **Multi-worker deployment** → 4× concurrent capacity
 
 **Capacity Analysis:**
-- Single instance: 1,306 RPS = 113M requests/day
-- For 200K products × 1 request/day = 560× headroom
+- Single instance: 2,254 RPS = 195M requests/day
+- For 200K products × 1 request/day = 975× headroom
 - Horizontal scaling: Add instances for linear capacity increase
 
 **Evidence:** `docs/assets/load-testing/locust_results.png`
@@ -308,7 +326,7 @@ This system is designed for platforms serving **thousands of small merchants** i
 **Current:** Single-region deployment
 - 3-5 API pods behind load balancer
 - Daily batch retraining
-- 1,300 RPS capacity
+- 2,254 RPS capacity per instance
 
 **Scale Path:**
 
@@ -328,7 +346,7 @@ This system is designed for platforms serving **thousands of small merchants** i
 
 1. **Data characteristics dictate approach** → 89% one-time users make CF mathematically impossible (validated empirically)
 2. **Activity-based ranking is appropriate** → Targets engaged users, better than random, honest about limitations
-3. **Production performance proven** → 1,306 RPS with zero failures demonstrates deployment readiness
+3. **Production performance proven** → 2,254 RPS with zero failures and 30× optimization demonstrates deployment readiness
 
 ### Improvement Roadmap
 
@@ -353,7 +371,7 @@ This system is designed for platforms serving **thousands of small merchants** i
 
 ## Conclusion
 
-This project demonstrates mature data science judgment: choosing appropriate methods over sophisticated ones. By recognizing early that collaborative filtering would fail (89% one-time users), validating this empirically (0.04% precision), and designing an activity-based alternative, I delivered a production-ready system (1,306 RPS, 0% failures) that provides practical business value despite data constraints.
+This project demonstrates mature data science judgment: choosing appropriate methods over sophisticated ones. By recognizing early that collaborative filtering would fail (89% one-time users), validating this empirically (0.04% precision), and designing an activity-based alternative, I delivered a production-ready system (2,254 RPS, 0% failures, 30× optimized) that provides practical business value despite data constraints.
 
 The complete pipeline is documented, tested, and deployable. The integration path is realistic, designed for emerging market e-commerce platforms serving small merchants. The system balances technical rigor with practical usability—exactly what's needed for real-world impact.
 
@@ -376,7 +394,7 @@ The complete pipeline is documented, tested, and deployable. The integration pat
 - Data findings: `analysis/results/data_statistics.json` (89% one-time users)
 - CF validation: `analysis/results/cf_metrics.json` (0.04% precision)
 - Model metrics: `results/model_metrics.json` (zeros explained)
-- Load test: `docs/assets/load-testing/locust_results.png` (1,306 RPS proof)
+- Load test: `docs/assets/load-testing/locust_results.png` (2,254 RPS proof)
 
 ---
 

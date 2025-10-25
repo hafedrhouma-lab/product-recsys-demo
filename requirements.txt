@@ -11,6 +11,7 @@ scipy>=1.11.0
 fastapi>=0.100.0
 uvicorn[standard]>=0.23.0
 pydantic>=2.0.0
+orjson>=3.9.0  # For optimized JSON operations
 
 # UI
 gradio>=4.0.0
@@ -19,10 +20,10 @@ gradio>=4.0.0
 click>=8.1.0
 python-dateutil>=2.8.0
 
-# Testing (optional)
+# Testing
 pytest>=7.4.0
 httpx>=0.24.0
 locust>=2.15.0
 
-# For analysis only (not needed in Docker)
+# For analysis only (optional)
 # implicit>=0.7.0

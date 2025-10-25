@@ -11,50 +11,25 @@
 
 ## Quick Links
 
-- **📖 Usage Guide:** [README.md](README.md)
-- **📊 Technical Analysis:** [TECHNICAL_REPORT.md](TECHNICAL_REPORT.md)
-- **💻 Code Repository:** https://github.com/hafedrhouma-lab/product-recsys-demo
+- 📖 **Usage Guide:** [README.md](README.md)
+- 📊 **Technical Analysis:** [TECHNICAL_REPORT.md](TECHNICAL_REPORT.md)
+- 💻 **Code Repository:** https://github.com/hafedrhouma-lab/product-recsys-demo
 
 ---
 
 ## Executive Summary
 
-Built a production-ready recommendation system for a high-churn e-commerce marketplace.
+Built a production-ready recommendation system for high-churn e-commerce marketplace.
 
 **Challenge:** 89% one-time users, 3% retention → Collaborative filtering fails
 
-**Solution:** Activity-based ranking system (pragmatic approach for difficult data)
+**Solution:** Activity-based ranking with production-grade optimizations
 
 **Results:**
-- ✅ 1,306 RPS throughput, 0% failures
-- ✅ Sub-500ms median latency
-- ✅ Complete testing (unit + load)
-- ✅ Comprehensive documentation
-
----
-
-## Repository Structure
-
-```
-product-recommendation-system/
-├── README.md                    # Complete usage guide
-├── TECHNICAL_REPORT.md          # Detailed DS analysis
-│
-├── analysis/                    # Data exploration & validation
-│   ├── 01_data_exploration.py  # Proves high churn
-│   ├── 02_cf_attempt.py        # Proves CF fails
-│   └── results/                # JSON results
-│
-├── src/                         # Production code
-│   ├── model.py                # ActivityBaseline model
-│   ├── api.py                  # FastAPI server
-│   └── ...                     # Supporting modules
-│
-├── tests/                       # Unit tests (7/7 passing)
-├── stress_test/                 # Load testing (1306 RPS)
-├── deployment/                  # Docker + Gradio demo
-└── docs/assets/                 # Screenshots & results
-```
+- ✅ 2,254 RPS throughput, 0% failures
+- ✅ 1-70ms median latency (30× improvement)
+- ✅ Comprehensive testing (unit + load)
+- ✅ Production-optimized implementation
 
 ---
 
@@ -62,226 +37,196 @@ product-recommendation-system/
 
 ### 1. Data Analysis ✅
 
-**Files:**
-- `analysis/01_data_exploration.py` - Initial data exploration
-- `analysis/02_cf_attempt.py` - CF validation (proves it fails)
-- `analysis/results/data_statistics.json` - Key findings
-- `analysis/results/cf_metrics.json` - CF performance (~0%)
+**Files:** `analysis/` directory
 
-**Key Finding:** 89% one-time users, 3% retention → CF not viable
+**Key Finding:** 89% one-time users, 3% retention → CF not viable (validated empirically)
 
 ---
 
 ### 2. Model Implementation ✅
 
-**Files:**
-- `src/model.py` - ActivityBaseline model
-- `cli/train.py` - Training pipeline
-- `src/user_features.py` - Engagement scoring
-- `results/model_metrics.json` - Evaluation results
+**Files:** `src/model.py`, `cli/train.py`
 
-**Approach:** Activity-based ranking (appropriate for data)
+**Approach:** Activity-based ranking (appropriate for data constraints)
 
 ---
 
 ### 3. API Deployment ✅
 
-**Files:**
-- `src/api.py` - FastAPI server
-- `deployment/Dockerfile` - Container definition
-- `deployment/app.py` - Gradio demo UI
-- `docs/assets/load-testing/` - Performance results
+**Files:** `src/api.py`, `deployment/`
 
-**Performance:** 1,306 RPS, 0% failures, <500ms median latency
+**Performance:** 
+- 2,254 RPS throughput
+- 1-70ms median latency
+- 0% failures under 1,000 concurrent users
+- 30× improvement from baseline
 
 ---
 
 ### 4. Testing ✅
 
-**Files:**
-- `tests/test_api.py` - Unit tests (7/7 passing)
-- `stress_test/locustfile.py` - Load testing
+**Files:** `tests/`, `stress_test/`
 
 **Results:**
-- Unit tests: 100% pass rate in 0.09s
-- Load tests: 1,306 RPS, 0% failures, 1000 concurrent users
+- Unit: 7/7 tests passed
+- Load: 2,254 RPS, 0% failures
 
 ---
 
 ### 5. Documentation ✅
 
-**Files:**
-- `README.md` - Complete usage guide
-- `TECHNICAL_REPORT.md` - Detailed analysis (15+ pages)
-- Comprehensive code comments
-- Type hints throughout
+**Files:** README.md, TECHNICAL_REPORT.md
+
+**Content:** Complete pipeline, methodology, performance analysis
+
+---
+
+## Performance Highlights
+
+### Final Optimized Results
+
+| Metric | Value | Industry Standard |
+|--------|-------|-------------------|
+| **Throughput** | 2,254 RPS | Excellent ✅ |
+| **Median Latency** | 1-70ms | Exceptional ✅ |
+| **P90 (Core API)** | 18-86ms | Excellent ✅ |
+| **Failures** | 0% | Perfect ✅ |
+
+### Optimization Journey
+
+**Baseline (DataFrame filtering):**
+- P90: 540-1,200ms
+- Throughput: 1,306 RPS
+
+**Final (Optimized):**
+- P90: 18-86ms  
+- Throughput: 2,254 RPS
+- **Improvement: 30× faster, 73% more throughput**
+
+### Key Optimizations Applied
+
+1. **Pre-serialized JSON cache** (O(1) lookup)
+2. **orjson** integration (2-3× faster JSON)
+3. **Removed Pydantic validation** (direct responses)
+4. **Pre-computed monitoring endpoints**
+5. **Multi-worker deployment** (4× concurrent capacity)
 
 ---
 
 ## How to Review
 
-### Quick Review (15 minutes)
+### Quick Review (10 minutes)
 
-1. **Read:** [TECHNICAL_REPORT.md](TECHNICAL_REPORT.md) - Executive Summary
-2. **Check:** `analysis/results/` - JSON files with key findings
-3. **Browse:** `src/model.py` - Core implementation
-4. **View:** `docs/assets/load-testing/` - Performance proof
+1. **Read:** TECHNICAL_REPORT.md - Executive Summary + Performance section
+2. **View:** `docs/assets/load-testing/` - Performance screenshots
+3. **Check:** `analysis/results/*.json` - Data findings
 
 ---
 
-### Thorough Review (1-2 hours)
+### Code Review (30 minutes)
 
-1. **Clone repository:**
 ```bash
+# Clone
 git clone https://github.com/hafedrhouma-lab/product-recsys-demo.git
-cd product-recsys-demo
+
+# Key files to review:
+- src/api.py          # Optimized API implementation
+- src/model.py        # Core model
+- analysis/*.py       # Data validation
+- tests/test_api.py   # Unit tests
 ```
 
-2. **Setup environment:**
+---
+
+### Full Testing (1 hour)
+
 ```bash
+# Setup
 conda env create -f environment.yml
 conda activate recommendation-system
-```
 
-3. **Run analysis:**
-```bash
-python analysis/01_data_exploration.py  # ~2 min
-python analysis/02_cf_attempt.py        # ~5 min
-```
+# Run pipeline
+python cli/prepare.py
+python cli/features.py
+python cli/train.py --quick
 
-4. **Review results:**
-```bash
-cat analysis/results/data_statistics.json  # Key data findings
-cat analysis/results/cf_metrics.json       # CF validation
-```
-
-5. **Test system (optional):**
-```bash
-# Quick training
-python cli/train.py --quick  # ~3 min
-
-# Start API
-cd src && uvicorn api:app --reload
-
-# Run tests (new terminal)
+# Test
 pytest tests/test_api.py -v
+uvicorn src.api:app --workers 4 &
+locust -f stress_test/locustfile.py --host=http://localhost:8000
 ```
 
 ---
 
 ## Key Technical Decisions
 
-### 1. Why Activity-Based (Not Collaborative Filtering)?
+### 1. Why Activity-Based?
 
-**Data Reality:**
-- 89% one-time users
-- 3% retention rate
-- 99.99% sparsity
+**Data:** 89% one-time users, 99.99% sparsity
 
-**Validation:**
-- Implemented ALS: achieved 0.0% precision
-- See: `analysis/02_cf_attempt.py` and `analysis/results/cf_metrics.json`
+**Validation:** Implemented ALS → 0% precision
 
-**Conclusion:** CF mathematically infeasible for this data
+**Conclusion:** CF mathematically infeasible
+
+**Evidence:** `analysis/results/cf_metrics.json`
 
 ---
 
 ### 2. Why Zero Offline Metrics?
 
-**Training Results:**
-```
-Precision@10: 0.0000
-Recall@10:    0.0000
-```
+**Result:** Precision/Recall = 0.0000
 
-**Explanation:**
-- Activity-based ranking, not prediction
-- Cannot predict when users don't return (89% one-time)
-- Traditional metrics don't apply
-- Proper validation: A/B testing in production
+**Reason:** Activity ranking (not prediction) + users don't return
 
-**Detailed explanation:** See TECHNICAL_REPORT.md - Evaluation section
+**Proper validation:** A/B testing in production
 
 ---
 
-### 3. Production Readiness
+### 3. Production Optimization
 
-**Load Testing:**
-- 1,000 concurrent users
-- 1,306 RPS throughput
-- 0% failure rate
-- Sub-500ms median latency
+**Initial:** 540ms p90 (DataFrame filtering per request)
 
-**Evidence:** `docs/assets/load-testing/locust_results.png`
+**Optimizations:**
+- Pre-serialized cache → 50-200ms saved
+- orjson → 5-10ms saved
+- Removed Pydantic → 10-20ms saved
+- Pre-computed responses → 30-150ms saved
 
----
-
-## Highlights
-
-### What Went Well ✅
-
-1. **Honest Analysis**
-   - Identified data constraints early
-   - Validated CF doesn't work (empirically)
-   - Chose appropriate method
-
-2. **Production Quality**
-   - Comprehensive testing
-   - Scale validation (1300 RPS)
-   - Clean code with types/logging
-
-3. **Clear Communication**
-   - Explains limitations openly
-   - Evidence-based decisions
-   - Realistic expectations
+**Final:** 18-86ms p90 (30× improvement)
 
 ---
 
-### Demonstrates Lead DS Skills ✅
+## Demonstrates Lead DS Skills
 
-**Technical:**
-- Deep data analysis
-- Multiple approaches evaluated
-- Production-scale implementation
-- Comprehensive testing
+### Technical Excellence ✅
+- Deep data analysis (identified constraints early)
+- Multiple approaches evaluated (CF vs activity-based)
+- Production-grade optimizations (30× performance gain)
+- Comprehensive testing (unit + load)
 
-**Business:**
+### Business Acumen ✅
 - Pragmatic problem reframing
-- Value-focused solution
-- Real-world validation strategy
-- ROI-oriented thinking
+- Honest about limitations
+- ROI-focused solution design
+- Realistic validation strategy
 
-**Leadership:**
-- Honest communication
+### Communication ✅
 - Evidence-based decisions
-- Strategic roadmap
-- Stakeholder-ready documentation
-
----
-
-## Contact
-
-**Questions?** Open an issue on GitHub: https://github.com/hafedrhouma-lab/product-recsys-demo/issues
-
-**Portfolio:** https://github.com/hafedrhouma-lab/code
-
-**LinkedIn:** https://www.linkedin.com/in/hafed-rhouma/
+- Clear technical documentation
+- Stakeholder-ready reports
 
 ---
 
 ## Notes for Reviewers
 
-**Data Files Not Included:**
-- Raw CSV: ~500MB (too large for GitHub)
-- Processed parquet: ~200MB
-- Trained models: ~150MB
+**Data files not included** (too large for GitHub):
+- Place CSV in: `data/raw/csv_for_case_study_V1.csv`
+- Or use sample data generation script
 
-**To test system:** Place your CSV in `data/raw/csv_for_case_study_V1.csv` and run pipeline
-
-**Alternative:** Sample data generation script can be provided for testing without real data
+**To test without data:** API can be tested with mock data
 
 ---
 
-**Thank you for your time reviewing this submission!**
+**Thank you for reviewing!**
 
-*Built with: honest data science, appropriate methods, production readiness* 🚀
+*Built with: honest data science, appropriate methods, production optimization* 🚀
