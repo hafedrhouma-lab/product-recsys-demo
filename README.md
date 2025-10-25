@@ -162,7 +162,7 @@ python app.py
 
 **Use Case:** Campaign planning (not real-time serving) - 120ms latency is appropriate.
 
-![Locust Load Test Results](docs/assets/load-testing/locust_stats.png)
+![Locust Load Test Results](docs/assets/load-testing/locust_results.png)
 *Load test: 1,000 concurrent users, 67K+ requests, 0% failure rate*
 
 ---
