@@ -1,0 +1,15 @@
+{
+  "model_type": "activity_baseline",
+  "quick_mode": true,
+  "train_size": 39951,
+  "test_size": 9988,
+  "metrics": {
+    "precision@5": 0.0,
+    "recall@5": 0.0,
+    "precision@10": 0.0,
+    "recall@10": 0.0,
+    "precision@20": 0.0,
+    "recall@20": 0.0,
+    "coverage": 0.40674707219017653
+  }
+}

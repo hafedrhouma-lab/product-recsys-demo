@@ -1,0 +1,45 @@
+{
+  "total_interactions": 498879,
+  "unique_users": 433787,
+  "unique_products": 200325,
+  "date_range": {
+    "start": "2022-10-01 00:03:06+00:00",
+    "end": "2023-03-31 23:59:52+00:00"
+  },
+  "sparsity": 0.999994,
+  "user_retention": {
+    "early_period_users": 336599,
+    "late_period_users": 88967,
+    "returning_users": 10256,
+    "retention_rate_pct": 3.05
+  },
+  "user_behavior": {
+    "median_interactions_per_user": 1,
+    "mean_interactions_per_user": 1.15,
+    "one_time_users_pct": 88.78,
+    "low_activity_users_pct": 11.07,
+    "power_users_pct": 0.15
+  },
+  "product_churn": {
+    "early_period_products": 159983,
+    "late_period_products": 51703,
+    "new_products_in_test": 29458,
+    "new_products_pct": 56.98
+  },
+  "event_distribution": {
+    "counts": {
+      "cart": 304282,
+      "purchased": 166150,
+      "wishlist": 22178,
+      "search_keyword": 3190,
+      "rating": 3079
+    },
+    "percentages": {
+      "cart": 60.99,
+      "purchased": 33.3,
+      "wishlist": 4.45,
+      "search_keyword": 0.64,
+      "rating": 0.62
+    }
+  }
+}

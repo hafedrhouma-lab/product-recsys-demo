@@ -4,10 +4,6 @@ data/
 *.xlsx
 *.xls
 
-
-# Results (can be regenerated)
-results/
-
 # Python
 __pycache__/
 *.py[cod]
