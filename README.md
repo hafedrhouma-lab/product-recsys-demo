@@ -163,7 +163,7 @@ python app.py
 
 **Test Environment:** MacBook (localhost) - Production deployment on cloud infrastructure would have additional network latency but better horizontal scaling.
 
-![Locust Load Test Results](docs/assets/load-testing/locust_stats.png)
+![Locust Load Test Results](docs/assets/load-testing/locust_results.png)
 *Load test: 1,000 concurrent users, 67K+ requests, 0% failure rate*
 
 ---
