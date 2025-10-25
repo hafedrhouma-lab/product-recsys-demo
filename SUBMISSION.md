@@ -27,7 +27,7 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
 
 **Results:**
 - ✅ 2,534 RPS throughput (recommendation endpoint), 0% failures
-- ✅ 120ms P50, 220ms P90 (suitable for campaign planning)
+- ✅ 200ms P50, 270ms P95 (suitable for campaign planning)
 - ✅ Comprehensive testing (unit + load)
 - ✅ Production-optimized implementation
 
@@ -57,7 +57,7 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
 
 **Performance:** 
 - 2,534 RPS throughput (recommendation endpoint)
-- 120ms P50, 220ms P90
+- 200ms P50, 270ms P95
 - 0% failures under 1,000 concurrent users
 - Suitable for campaign planning use case
 
@@ -69,7 +69,7 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
 
 **Results:**
 - Unit: 7/7 tests passed
-- Load: 2,534 RPS, 0% failures, 120ms P50
+- Load: 2,534 RPS, 0% failures, 270ms P95
 
 ---
 
@@ -90,8 +90,8 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
 | Metric | Value | Status |
 |--------|-------|--------|
 | **Throughput** | 2,534 RPS | Excellent ✅ |
-| **Median Latency** | 120ms | Suitable ✅ |
-| **P90 Latency** | 220ms | Acceptable ✅ |
+| **Median Latency** | 200ms | Suitable ✅ |
+| **P95 Latency** | 270ms | Acceptable ✅ |
 | **Failures** | 0% | Perfect ✅ |
 
 **Note:** Localhost testing provides performance baseline. Production cloud deployment would add network latency but enable horizontal scaling.
@@ -103,11 +103,11 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
 3. **Removed Pydantic validation** (direct response construction)
 4. **Multi-worker deployment** (4 workers for concurrent capacity)
 
-**Result:** 120ms P50, 220ms P90 - suitable for campaign planning use case
+**Result:** 200ms P50, 270ms P95 - suitable for campaign planning use case
 
 **Further optimization paths (if needed):**
-- Pre-compute n variants (5,10,20): ~80ms P50, ~140ms P90
-- Rewrite in Go/Rust: ~40ms P50
+- Pre-compute n variants (5,10,20): ~200ms P95
+- Rewrite in Go/Rust: ~50ms P95
 
 ---
 

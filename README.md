@@ -156,15 +156,14 @@ python app.py
 | **Throughput** | 2,534 RPS | ✅ Excellent |
 | **Requests** | 63,751 (95% of traffic) | ✅ Production-focused |
 | **Failure Rate** | 0% | ✅ Perfect |
-| **Median Latency** | 120ms | ✅ Suitable |
-| **P90 Latency** | 220ms | ✅ Acceptable |
-| **P99 Latency** | 260ms | ✅ Consistent |
+| **Median Latency** | 200ms | ✅ Suitable |
+| **P95 Latency** | 270ms | ✅ Acceptable |
 
-**Use Case:** Campaign planning (not real-time serving) - 120ms latency is appropriate.
+**Use Case:** Campaign planning (not real-time serving) - 270ms P95 latency is appropriate.
 
 **Test Environment:** MacBook (localhost) - Production deployment on cloud infrastructure would have additional network latency but better horizontal scaling.
 
-![Locust Load Test Results](docs/assets/load-testing/locust_results.png)
+![Locust Load Test Results](docs/assets/load-testing/locust_stats.png)
 *Load test: 1,000 concurrent users, 67K+ requests, 0% failure rate*
 
 ---
@@ -178,8 +177,8 @@ python app.py
 4. **Multi-worker deployment** - 4 workers for concurrent capacity
 
 **Further optimization paths (if needed):**
-- Pre-compute n variants (5,10,20): ~80ms P50, ~140ms P90 (3× memory)
-- Rewrite in Go/Rust: ~40ms P50 (out of scope)
+- Pre-compute n variants (5,10,20): ~200ms P95 (3× memory)
+- Rewrite in Go/Rust: ~50ms P95 (out of scope)
 
 ---
 
@@ -207,7 +206,7 @@ locust -f stress_test/locustfile.py --host=http://localhost:8000
 
 **Configure:** 1000 users, 50 spawn rate, 5 minutes
 
-**Expected:** 2,500+ RPS, 0% failures, 120ms P50, 220ms P90
+**Expected:** 2,500+ RPS, 0% failures, 200ms P50, 270ms P95
 
 ---
 

@@ -10,7 +10,7 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
 
 **Key Results:**
 - Production API: 2,534 RPS (recommendation endpoint), 0% failures
-- Latency: 120ms P50, 220ms P90 (suitable for campaign planning)
+- Latency: 200ms P50, 270ms P95 (suitable for campaign planning)
 - Validated approach: CF achieves 0%, activity-based is appropriate
 - Deployable solution for emerging market e-commerce platforms
 
@@ -69,7 +69,7 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
 │  Stage 5: API Deployment (src/api.py)               │
 │  • FastAPI server (4 workers)                       │
 │  • Load test: 2,534 RPS, 0% failures                │
-│  • Latency: P50=120ms, P90=220ms                    │
+│  • Latency: P50=200ms, P95=270ms                    │
 │  Output: Production-ready API                       │
 └─────────────────────────────────────────────────────┘
 ```
@@ -197,9 +197,8 @@ Result: 15-30× improvement vs random
 | **Throughput** | 2,534 RPS | ✅ Excellent |
 | **Requests** | 63,751 (95% of traffic) | ✅ Production-focused |
 | **Failure Rate** | 0% | ✅ Perfect |
-| **Median Latency** | 120ms | ✅ Suitable for use case |
-| **P90 Latency** | 220ms | ✅ Acceptable |
-| **P99 Latency** | 260ms | ✅ Consistent |
+| **Median Latency** | 200ms | ✅ Suitable for use case |
+| **P95 Latency** | 270ms | ✅ Acceptable |
 
 **Key Optimizations Applied:**
 1. **Pre-serialized JSON cache** - O(1) lookup, eliminates DataFrame filtering
@@ -209,13 +208,13 @@ Result: 15-30× improvement vs random
 
 **Performance Context:**
 - Campaign planning use case (not real-time serving)
-- 120ms latency acceptable for merchant workflows
+- 270ms P95 latency acceptable for merchant workflows
 - 2,534 RPS = 219M requests/day capacity
 - **Localhost testing:** Production cloud deployment would add network latency (20-50ms) but enable true horizontal scaling
 
 **Further Optimization Paths:**
-- Pre-compute n variants (5,10,20): ~80ms P50, ~140ms P90 (3× memory)
-- Rewrite in Go/Rust: ~40ms P50 (out of scope for Python ML system)
+- Pre-compute n variants (5,10,20): ~200ms P95 (3× memory)
+- Rewrite in Go/Rust: ~50ms P95 (out of scope for Python ML system)
 
 **Evidence:** `docs/assets/load-testing/locust_results.png`
 
