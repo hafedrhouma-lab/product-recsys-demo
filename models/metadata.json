@@ -1,0 +1,7 @@
+{
+  "model_type": "activity_baseline",
+  "n_users": 39050,
+  "n_products": 16638,
+  "recency_days": 30,
+  "trained_at": "2025-10-25T03:15:19.493851"
+}
