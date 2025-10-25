@@ -26,8 +26,8 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
 **Solution:** Activity-based ranking with production-grade optimizations
 
 **Results:**
-- ✅ 2,254 RPS throughput, 0% failures
-- ✅ 1-70ms median latency (30× improvement)
+- ✅ 2,534 RPS throughput (recommendation endpoint), 0% failures
+- ✅ 120ms P50, 220ms P90 (suitable for campaign planning)
 - ✅ Comprehensive testing (unit + load)
 - ✅ Production-optimized implementation
 
@@ -56,10 +56,10 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
 **Files:** `src/api.py`, `deployment/`
 
 **Performance:** 
-- 2,254 RPS throughput
-- 1-70ms median latency
+- 2,534 RPS throughput (recommendation endpoint)
+- 120ms P50, 220ms P90
 - 0% failures under 1,000 concurrent users
-- 30× improvement from baseline
+- Suitable for campaign planning use case
 
 ---
 
@@ -69,7 +69,7 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
 
 **Results:**
 - Unit: 7/7 tests passed
-- Load: 2,254 RPS, 0% failures
+- Load: 2,534 RPS, 0% failures, 120ms P50
 
 ---
 
@@ -83,33 +83,27 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
 
 ## Performance Highlights
 
-### Final Optimized Results
+### Final Production Results
 
-| Metric | Value | Industry Standard |
-|--------|-------|-------------------|
-| **Throughput** | 2,254 RPS | Excellent ✅ |
-| **Median Latency** | 1-70ms | Exceptional ✅ |
-| **P90 (Core API)** | 18-86ms | Excellent ✅ |
+| Metric | Value | Status |
+|--------|-------|--------|
+| **Throughput** | 2,534 RPS | Excellent ✅ |
+| **Median Latency** | 120ms | Suitable ✅ |
+| **P90 Latency** | 220ms | Acceptable ✅ |
 | **Failures** | 0% | Perfect ✅ |
-
-### Optimization Journey
-
-**Baseline (DataFrame filtering):**
-- P90: 540-1,200ms
-- Throughput: 1,306 RPS
-
-**Final (Optimized):**
-- P90: 18-86ms  
-- Throughput: 2,254 RPS
-- **Improvement: 30× faster, 73% more throughput**
 
 ### Key Optimizations Applied
 
-1. **Pre-serialized JSON cache** (O(1) lookup)
-2. **orjson** integration (2-3× faster JSON)
-3. **Removed Pydantic validation** (direct responses)
-4. **Pre-computed monitoring endpoints**
-5. **Multi-worker deployment** (4× concurrent capacity)
+1. **Pre-serialized JSON cache** (O(1) lookup, eliminates DataFrame filtering)
+2. **orjson** integration (2-3× faster JSON operations)
+3. **Removed Pydantic validation** (direct response construction)
+4. **Multi-worker deployment** (4 workers for concurrent capacity)
+
+**Result:** 120ms P50, 220ms P90 - suitable for campaign planning use case
+
+**Further optimization paths (if needed):**
+- Pre-compute n variants (5,10,20): ~80ms P50, ~140ms P90
+- Rewrite in Go/Rust: ~40ms P50
 
 ---
 
@@ -182,26 +176,12 @@ locust -f stress_test/locustfile.py --host=http://localhost:8000
 
 ---
 
-### 3. Production Optimization
-
-**Initial:** 540ms p90 (DataFrame filtering per request)
-
-**Optimizations:**
-- Pre-serialized cache → 50-200ms saved
-- orjson → 5-10ms saved
-- Removed Pydantic → 10-20ms saved
-- Pre-computed responses → 30-150ms saved
-
-**Final:** 18-86ms p90 (30× improvement)
-
----
-
 ## Demonstrates Lead DS Skills
 
 ### Technical Excellence ✅
 - Deep data analysis (identified constraints early)
 - Multiple approaches evaluated (CF vs activity-based)
-- Production-grade optimizations (30× performance gain)
+- Production-grade optimizations (pre-serialization, orjson, multi-worker)
 - Comprehensive testing (unit + load)
 
 ### Business Acumen ✅

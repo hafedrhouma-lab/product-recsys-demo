@@ -5,8 +5,8 @@
 [![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-3100/)
 
 **Key Results:**
-- 🚀 2,254 RPS throughput, 0% failure rate  
-- ⚡ 1-70ms median latency (30× improvement from baseline)
+- 🚀 2,534 RPS throughput (recommendation endpoint), 0% failure rate  
+- ⚡ 120ms P50, 220ms P90 (suitable for campaign planning)
 - 📊 Production-ready with comprehensive testing
 
 ---
@@ -118,56 +118,39 @@ curl http://localhost:8000/products/sample?n=5
 
 ## Performance
 
-### Load Test Results (Final Optimized)
+### Load Test Results
 
 **Configuration:**
 - Concurrent users: 1,000
 - Duration: 5 minutes
 - Tool: Locust
 
-**Results:**
+**Results (Recommendation Endpoint):**
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| **Throughput** | 2,254 RPS | ✅ Excellent |
+| **Throughput** | 2,534 RPS | ✅ Excellent |
+| **Requests** | 63,751 (95% of traffic) | ✅ Production-focused |
 | **Failure Rate** | 0% | ✅ Perfect |
-| **Median (Core API)** | 1-70ms | ✅ Exceptional |
-| **Best Case** | 1-3ms | ✅ Near-instant |
-| **P90 (Recommendations)** | 18-86ms | ✅ Excellent |
+| **Median Latency** | 120ms | ✅ Suitable |
+| **P90 Latency** | 220ms | ✅ Acceptable |
+| **P99 Latency** | 260ms | ✅ Consistent |
 
-**Performance Journey:**
-- Initial (DataFrame filtering): 540-1,200ms p90
-- Final (Optimized): 18-86ms p90
-- **Improvement: 30× faster** 🚀
+**Use Case:** Campaign planning (not real-time serving) - 120ms latency is appropriate.
 
 ---
 
 ### Key Optimizations
 
-**1. Pre-serialized JSON Cache**
-- Compute recommendations once at startup
-- Store as JSON strings (no runtime serialization)
-- O(1) dictionary lookup per request
-- **Impact:** 50-200ms → <5ms per request
+**Applied:**
+1. **Pre-serialized JSON cache** - O(1) lookup, eliminates DataFrame filtering
+2. **orjson integration** - 2-3× faster JSON operations
+3. **Removed Pydantic validation** - Direct response construction
+4. **Multi-worker deployment** - 4 workers for concurrent capacity
 
-**2. orjson Integration**
-- 2-3× faster JSON operations vs standard library
-- **Impact:** Additional 5-10ms improvement
-
-**3. Removed Pydantic Validation**
-- Direct JSON responses (no model validation overhead)
-- **Impact:** 10-20ms improvement
-
-**4. Pre-computed Health/Metrics**
-- Cached responses (no computation per request)
-- **Impact:** 30-150ms → <5ms
-
-**5. Multi-worker Deployment**
-- 4 workers = 4× concurrent capacity
-- **Impact:** Linear throughput scaling
-
-**Without these optimizations:** 540-1,200ms p90 (baseline)
-**With all optimizations:** 18-86ms p90 (current)
+**Further optimization paths (if needed):**
+- Pre-compute n variants (5,10,20): ~80ms P50, ~140ms P90 (3× memory)
+- Rewrite in Go/Rust: ~40ms P50 (out of scope)
 
 ---
 
@@ -195,7 +178,7 @@ locust -f stress_test/locustfile.py --host=http://localhost:8000
 
 **Configure:** 1000 users, 50 spawn rate, 5 minutes
 
-**Expected:** 2,250+ RPS, 0% failures, <100ms p90
+**Expected:** 2,500+ RPS, 0% failures, 120ms P50, 220ms P90
 
 ---
 
@@ -248,7 +231,7 @@ docker run -p 8000:8000 recommendation-api
 uvicorn src.api:app --workers 4 --host 0.0.0.0 --port 8000 --log-level warning
 ```
 
-**Capacity:** 2,254 RPS per instance, horizontal scaling available
+**Capacity:** 2,534 RPS per instance, horizontal scaling available
 
 ---
 

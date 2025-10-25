@@ -6,10 +6,11 @@
 
 ## Executive Summary
 
-Built a production-ready recommendation system for high-churn e-commerce marketplaces that identifies top-N engaged users for each product. The system addresses a critical business challenge: when 89% of users interact once and never return, traditional collaborative filtering fails completely (validated: 0.04% precision). Instead, an activity-based ranking system targets the most engaged users on the platform, achieving 2,254 RPS throughput with zero failures and delivering practical business value despite data constraints.
+Built a production-ready recommendation system for high-churn e-commerce marketplaces that identifies top-N engaged users for each product. The system addresses a critical business challenge: when 89% of users interact once and never return, traditional collaborative filtering fails completely (validated: 0.04% precision). Instead, an activity-based ranking system targets the most engaged users on the platform, achieving 2,534 RPS on the recommendation endpoint with zero failures and delivering practical business value despite data constraints.
 
 **Key Results:**
-- Production API: 2,254 RPS, 0% failures, 1-70ms median latency (30× improvement)
+- Production API: 2,534 RPS (recommendation endpoint), 0% failures
+- Latency: 120ms P50, 220ms P90 (suitable for campaign planning)
 - Validated approach: CF achieves 0%, activity-based is appropriate
 - Deployable solution for emerging market e-commerce platforms
 
@@ -66,9 +67,9 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
          ▼
 ┌─────────────────────────────────────────────────────┐
 │  Stage 5: API Deployment (src/api.py)               │
-│  • FastAPI server (multi-worker)                    │
-│  • Load test: 2,254 RPS, 0% failures                │
-│  • Latency: median 1-70ms, p90 18-86ms              │
+│  • FastAPI server (4 workers)                       │
+│  • Load test: 2,534 RPS, 0% failures                │
+│  • Latency: P50=120ms, P90=220ms                    │
 │  Output: Production-ready API                       │
 └─────────────────────────────────────────────────────┘
 ```
@@ -186,40 +187,33 @@ Result: 15-30× improvement vs random
 - Tool: Locust
 - Users: 1,000 concurrent
 - Duration: 5 minutes
-- Requests: 54,000+ total
+- Total requests: 67,371
 
-**Results (Final Optimized):**
+**Results (Recommendation Endpoint):**
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| **Throughput** | 2,254 RPS | ✅ Excellent |
+| **Throughput** | 2,534 RPS | ✅ Excellent |
+| **Requests** | 63,751 (95% of traffic) | ✅ Production-focused |
 | **Failure Rate** | 0% | ✅ Perfect |
-| **Median Latency** | 1-70ms | ✅ Exceptional |
-| **P90 (Core API)** | 18-86ms | ✅ Excellent |
-| **P99 Latency** | 150-420ms | ✅ Strong |
+| **Median Latency** | 120ms | ✅ Suitable for use case |
+| **P90 Latency** | 220ms | ✅ Acceptable |
+| **P99 Latency** | 260ms | ✅ Consistent |
 
-**Optimization Journey:**
+**Key Optimizations Applied:**
+1. **Pre-serialized JSON cache** - O(1) lookup, eliminates DataFrame filtering
+2. **orjson integration** - 2-3× faster JSON operations
+3. **Removed Pydantic validation** - Direct response construction
+4. **Multi-worker deployment** - 4 workers for concurrent capacity
 
-Without optimizations (baseline):
-- P90: 540-1,200ms
-- Throughput: 1,306 RPS
+**Performance Context:**
+- Campaign planning use case (not real-time serving)
+- 120ms latency acceptable for merchant workflows
+- 2,534 RPS = 219M requests/day capacity
 
-With all optimizations (current):
-- P90: 18-86ms
-- Throughput: 2,254 RPS
-- **Improvement: 30× faster, 73% more throughput**
-
-**Key Optimizations:**
-1. **Pre-serialized JSON cache** → O(1) lookup, 50-200ms saved
-2. **orjson integration** → 2-3× faster JSON, 5-10ms saved
-3. **Removed Pydantic validation** → Direct responses, 10-20ms saved
-4. **Pre-computed health/metrics** → 30-150ms saved
-5. **Multi-worker deployment** → 4× concurrent capacity
-
-**Capacity Analysis:**
-- Single instance: 2,254 RPS = 195M requests/day
-- For 200K products × 1 request/day = 975× headroom
-- Horizontal scaling: Add instances for linear capacity increase
+**Further Optimization Paths:**
+- Pre-compute n variants (5,10,20): ~80ms P50, ~140ms P90 (3× memory)
+- Rewrite in Go/Rust: ~40ms P50 (out of scope for Python ML system)
 
 **Evidence:** `docs/assets/load-testing/locust_results.png`
 
@@ -326,7 +320,7 @@ This system is designed for platforms serving **thousands of small merchants** i
 **Current:** Single-region deployment
 - 3-5 API pods behind load balancer
 - Daily batch retraining
-- 2,254 RPS capacity per instance
+- 2,534 RPS capacity per instance (recommendation endpoint)
 
 **Scale Path:**
 
@@ -346,7 +340,7 @@ This system is designed for platforms serving **thousands of small merchants** i
 
 1. **Data characteristics dictate approach** → 89% one-time users make CF mathematically impossible (validated empirically)
 2. **Activity-based ranking is appropriate** → Targets engaged users, better than random, honest about limitations
-3. **Production performance proven** → 2,254 RPS with zero failures and 30× optimization demonstrates deployment readiness
+3. **Production performance proven** → 2,534 RPS with zero failures demonstrates deployment readiness
 
 ### Improvement Roadmap
 
@@ -371,7 +365,7 @@ This system is designed for platforms serving **thousands of small merchants** i
 
 ## Conclusion
 
-This project demonstrates mature data science judgment: choosing appropriate methods over sophisticated ones. By recognizing early that collaborative filtering would fail (89% one-time users), validating this empirically (0.04% precision), and designing an activity-based alternative, I delivered a production-ready system (2,254 RPS, 0% failures, 30× optimized) that provides practical business value despite data constraints.
+This project demonstrates mature data science judgment: choosing appropriate methods over sophisticated ones. By recognizing early that collaborative filtering would fail (89% one-time users), validating this empirically (0.04% precision), and designing an activity-based alternative, I delivered a production-ready system (2,534 RPS, 0% failures) that provides practical business value despite data constraints.
 
 The complete pipeline is documented, tested, and deployable. The integration path is realistic, designed for emerging market e-commerce platforms serving small merchants. The system balances technical rigor with practical usability—exactly what's needed for real-world impact.
 
@@ -394,7 +388,7 @@ The complete pipeline is documented, tested, and deployable. The integration pat
 - Data findings: `analysis/results/data_statistics.json` (89% one-time users)
 - CF validation: `analysis/results/cf_metrics.json` (0.04% precision)
 - Model metrics: `results/model_metrics.json` (zeros explained)
-- Load test: `docs/assets/load-testing/locust_results.png` (2,254 RPS proof)
+- Load test: `docs/assets/load-testing/locust_results.png` (2,534 RPS proof)
 
 ---
 
