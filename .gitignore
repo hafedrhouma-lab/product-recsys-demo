@@ -1,19 +1,9 @@
 # Data files (too large for git)
 data/
-*.parquet
-*.csv
 *.tsv
 *.xlsx
 *.xls
 
-# Model files (too large for git)
-models/
-*.pkl
-*.joblib
-*.h5
-*.pt
-*.pth
-*.onnx
 
 # Results (can be regenerated)
 results/
