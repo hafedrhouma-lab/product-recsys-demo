@@ -116,6 +116,30 @@ curl http://localhost:8000/products/sample?n=5
 
 ---
 
+## Demo Application
+
+### Interactive UI (Gradio)
+
+```bash
+cd deployment
+python app.py
+```
+
+**Access:** http://localhost:7860
+
+**Features:**
+- Browse sample product IDs
+- Enter any product ID
+- Adjust number of recommendations (1-100)
+- View user rankings with engagement scores
+
+![Gradio Demo Interface](docs/assets/gradio/gradio-demo.png)
+*Interactive demo: Test recommendations with visual interface*
+
+**Note:** Activity-based ranking targets most recently active users. Not predictive due to 89% one-time user pattern.
+
+---
+
 ## Performance
 
 ### Load Test Results
@@ -137,6 +161,9 @@ curl http://localhost:8000/products/sample?n=5
 | **P99 Latency** | 260ms | ✅ Consistent |
 
 **Use Case:** Campaign planning (not real-time serving) - 120ms latency is appropriate.
+
+![Locust Load Test Results](docs/assets/load-testing/locust_stats.png)
+*Load test: 1,000 concurrent users, 67K+ requests, 0% failure rate*
 
 ---
 
