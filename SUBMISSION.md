@@ -85,12 +85,16 @@ Built a production-ready recommendation system for high-churn e-commerce marketp
 
 ### Final Production Results
 
+**Test Environment:** M1 Pro MacBook (localhost testing)
+
 | Metric | Value | Status |
 |--------|-------|--------|
 | **Throughput** | 2,534 RPS | Excellent ✅ |
 | **Median Latency** | 120ms | Suitable ✅ |
 | **P90 Latency** | 220ms | Acceptable ✅ |
 | **Failures** | 0% | Perfect ✅ |
+
+**Note:** Localhost testing provides performance baseline. Production cloud deployment would add network latency but enable horizontal scaling.
 
 ### Key Optimizations Applied
 

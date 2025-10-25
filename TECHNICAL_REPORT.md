@@ -188,6 +188,7 @@ Result: 15-30× improvement vs random
 - Users: 1,000 concurrent
 - Duration: 5 minutes
 - Total requests: 67,371
+- **Environment:** M1 Pro MacBook (localhost)
 
 **Results (Recommendation Endpoint):**
 
@@ -210,6 +211,7 @@ Result: 15-30× improvement vs random
 - Campaign planning use case (not real-time serving)
 - 120ms latency acceptable for merchant workflows
 - 2,534 RPS = 219M requests/day capacity
+- **Localhost testing:** Production cloud deployment would add network latency (20-50ms) but enable true horizontal scaling
 
 **Further Optimization Paths:**
 - Pre-compute n variants (5,10,20): ~80ms P50, ~140ms P90 (3× memory)
